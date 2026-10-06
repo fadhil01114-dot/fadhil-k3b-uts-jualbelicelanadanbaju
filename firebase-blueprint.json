@@ -1,164 +1,164 @@
 {
   "entities": {
-    "YardBlock": {
-      "title": "YardBlock",
-      "description": "Container yard block stacking zone",
-      "type": "object",
-      "properties": {
-        "id": { "type": "string" },
-        "blockCode": { "type": "string" },
-        "capacityTeu": { "type": "number" },
-        "currentTeuCount": { "type": "number" },
-        "totalRows": { "type": "number" },
-        "totalTiers": { "type": "number" },
-        "categoryAllowed": { "type": "string" },
-        "status": { "type": "string" }
-      },
-      "required": ["id", "blockCode", "capacityTeu"]
-    },
-    "Equipment": {
-      "title": "Equipment",
-      "description": "Heavy terminal equipment and cranes",
-      "type": "object",
-      "properties": {
-        "id": { "type": "string" },
-        "code": { "type": "string" },
-        "equipmentType": { "type": "string" },
-        "maxCapacityTons": { "type": "number" },
-        "operatorName": { "type": "string" },
-        "status": { "type": "string" }
-      },
-      "required": ["id", "code", "equipmentType"]
-    },
-    "Berth": {
-      "title": "Berth",
-      "description": "Ship berthing quay terminal master data",
+    "PassengerShip": {
+      "title": "PassengerShip",
+      "description": "Passenger and Ro-Ro cargo ship fleet",
       "type": "object",
       "properties": {
         "id": { "type": "string" },
         "name": { "type": "string" },
-        "lengthMeters": { "type": "number" },
-        "maxDraft": { "type": "number" },
-        "craneCount": { "type": "number" },
+        "vesselType": { "type": "string" },
+        "passengerCapacity": { "type": "number" },
+        "vehicleCapacity": { "type": "number" },
+        "cargoCapacityTons": { "type": "number" },
+        "captainName": { "type": "string" },
         "status": { "type": "string" }
       },
-      "required": ["id", "name", "lengthMeters"]
+      "required": ["id", "name", "vesselType", "passengerCapacity"]
     },
-    "ContainerCategory": {
-      "title": "ContainerCategory",
-      "description": "Container ISO category and handling rates",
+    "ShipRoute": {
+      "title": "ShipRoute",
+      "description": "Ship sailing routes and ports",
       "type": "object",
       "properties": {
         "id": { "type": "string" },
-        "code": { "type": "string" },
-        "name": { "type": "string" },
-        "size": { "type": "string" },
-        "type": { "type": "string" },
-        "handlingFeePerShift": { "type": "number" }
+        "routeCode": { "type": "string" },
+        "originPort": { "type": "string" },
+        "transitPort": { "type": "string" },
+        "destinationPort": { "type": "string" },
+        "distanceMiles": { "type": "number" },
+        "durationHours": { "type": "number" }
       },
-      "required": ["id", "code", "name", "handlingFeePerShift"]
+      "required": ["id", "routeCode", "originPort", "destinationPort"]
     },
-    "ShippingLine": {
-      "title": "ShippingLine",
-      "description": "Shipping line company master data",
+    "TicketClass": {
+      "title": "TicketClass",
+      "description": "Passenger cabin classes and fares",
       "type": "object",
       "properties": {
         "id": { "type": "string" },
-        "lineName": { "type": "string" },
-        "isoCode": { "type": "string" },
+        "className": { "type": "string" },
+        "fareAdult": { "type": "number" },
+        "fareChild": { "type": "number" },
+        "facilities": { "type": "string" }
+      },
+      "required": ["id", "className", "fareAdult"]
+    },
+    "CargoCategory": {
+      "title": "CargoCategory",
+      "description": "Vehicle and cargo tariff categories",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "categoryName": { "type": "string" },
+        "fareRate": { "type": "number" },
+        "unit": { "type": "string" }
+      },
+      "required": ["id", "categoryName", "fareRate"]
+    },
+    "TicketAgent": {
+      "title": "TicketAgent",
+      "description": "Ticketing agents and booking partners",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "agentCode": { "type": "string" },
+        "agentName": { "type": "string" },
         "contactPerson": { "type": "string" },
-        "email": { "type": "string" },
-        "phone": { "type": "string" }
+        "phone": { "type": "string" },
+        "email": { "type": "string" }
       },
-      "required": ["id", "lineName", "email"]
+      "required": ["id", "agentCode", "agentName"]
     },
-    "VesselCall": {
-      "title": "VesselCall",
-      "description": "Ship call berthing & loading/unloading transaction",
+    "ShipVoyage": {
+      "title": "ShipVoyage",
+      "description": "Scheduled ship voyages for passengers and cargo",
       "type": "object",
       "properties": {
         "id": { "type": "string" },
-        "callSign": { "type": "string" },
-        "vesselName": { "type": "string" },
-        "shippingLineName": { "type": "string" },
-        "berthName": { "type": "string" },
-        "eta": { "type": "string" },
+        "voyageCode": { "type": "string" },
+        "shipName": { "type": "string" },
+        "routeCode": { "type": "string" },
+        "originPort": { "type": "string" },
+        "destinationPort": { "type": "string" },
         "etd": { "type": "string" },
-        "inboundTeu": { "type": "number" },
-        "outboundTeu": { "type": "number" },
+        "eta": { "type": "string" },
+        "bookedPassengers": { "type": "number" },
+        "bookedVehicles": { "type": "number" },
         "status": { "type": "string" }
       },
-      "required": ["id", "callSign", "vesselName", "berthName", "status"]
+      "required": ["id", "voyageCode", "shipName", "status"]
     },
-    "GateTransaction": {
-      "title": "GateTransaction",
-      "description": "Container Gate In / Gate Out TOS transaction",
+    "PassengerTicket": {
+      "title": "PassengerTicket",
+      "description": "Passenger ticket PNR reservation and boarding log",
       "type": "object",
       "properties": {
         "id": { "type": "string" },
-        "containerNumber": { "type": "string" },
-        "categoryCode": { "type": "string" },
-        "sealNumber": { "type": "string" },
+        "pnrCode": { "type": "string" },
+        "voyageCode": { "type": "string" },
+        "passengerName": { "type": "string" },
+        "nikNumber": { "type": "string" },
+        "gender": { "type": "string" },
+        "age": { "type": "number" },
+        "ticketClass": { "type": "string" },
+        "cabinBedNo": { "type": "string" },
+        "fareAmount": { "type": "number" },
+        "status": { "type": "string" }
+      },
+      "required": ["id", "pnrCode", "voyageCode", "passengerName", "nikNumber", "fareAmount"]
+    },
+    "CargoManifest": {
+      "title": "CargoManifest",
+      "description": "Vehicle and freight cargo manifest transaction",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "manifestNo": { "type": "string" },
+        "voyageCode": { "type": "string" },
+        "shipperName": { "type": "string" },
+        "cargoCategory": { "type": "string" },
+        "itemDescription": { "type": "string" },
         "truckPlate": { "type": "string" },
-        "driverName": { "type": "string" },
-        "transactionType": { "type": "string" },
-        "yardBlockCode": { "type": "string" },
-        "yardLocation": { "type": "string" },
-        "timestamp": { "type": "string" },
+        "weightTon": { "type": "number" },
+        "fareAmount": { "type": "number" },
         "status": { "type": "string" }
       },
-      "required": ["id", "containerNumber", "truckPlate", "transactionType", "yardBlockCode"]
-    },
-    "ContainerJob": {
-      "title": "ContainerJob",
-      "description": "Crane & equipment movement job order log",
-      "type": "object",
-      "properties": {
-        "id": { "type": "string" },
-        "jobCode": { "type": "string" },
-        "containerNumber": { "type": "string" },
-        "equipmentCode": { "type": "string" },
-        "operatorName": { "type": "string" },
-        "fromLocation": { "type": "string" },
-        "toLocation": { "type": "string" },
-        "timestamp": { "type": "string" },
-        "status": { "type": "string" }
-      },
-      "required": ["id", "jobCode", "containerNumber", "equipmentCode"]
+      "required": ["id", "manifestNo", "voyageCode", "shipperName", "fareAmount"]
     }
   },
   "firestore": {
-    "/yardBlocks/{blockId}": {
-      "schema": { "$ref": "#/entities/YardBlock" },
-      "description": "Master list of container yard blocks"
+    "/passengerShips/{shipId}": {
+      "schema": { "$ref": "#/entities/PassengerShip" },
+      "description": "Master list of passenger & cargo fleet ships"
     },
-    "/equipments/{equipmentId}": {
-      "schema": { "$ref": "#/entities/Equipment" },
-      "description": "Master list of cranes and heavy equipment"
+    "/shipRoutes/{routeId}": {
+      "schema": { "$ref": "#/entities/ShipRoute" },
+      "description": "Master list of ship sailing routes"
     },
-    "/berths/{berthId}": {
-      "schema": { "$ref": "#/entities/Berth" },
-      "description": "Master list of terminal quay berths"
+    "/ticketClasses/{classId}": {
+      "schema": { "$ref": "#/entities/TicketClass" },
+      "description": "Master list of ticket classes and fares"
     },
-    "/containerCategories/{categoryId}": {
-      "schema": { "$ref": "#/entities/ContainerCategory" },
-      "description": "Master list of container categories and tariffs"
+    "/cargoCategories/{catId}": {
+      "schema": { "$ref": "#/entities/CargoCategory" },
+      "description": "Master list of vehicle & cargo categories"
     },
-    "/shippingLines/{lineId}": {
-      "schema": { "$ref": "#/entities/ShippingLine" },
-      "description": "Master list of shipping lines"
+    "/ticketAgents/{agentId}": {
+      "schema": { "$ref": "#/entities/TicketAgent" },
+      "description": "Master list of ticketing agents"
     },
-    "/vesselCalls/{callId}": {
-      "schema": { "$ref": "#/entities/VesselCall" },
-      "description": "Transactions of vessel calls & berthing"
+    "/shipVoyages/{voyageId}": {
+      "schema": { "$ref": "#/entities/ShipVoyage" },
+      "description": "Transactions of scheduled ship voyages"
     },
-    "/gateTransactions/{gateId}": {
-      "schema": { "$ref": "#/entities/GateTransaction" },
-      "description": "Transactions of Gate In / Out container movements"
+    "/passengerTickets/{ticketId}": {
+      "schema": { "$ref": "#/entities/PassengerTicket" },
+      "description": "Transactions of passenger tickets PNR"
     },
-    "/containerJobs/{jobId}": {
-      "schema": { "$ref": "#/entities/ContainerJob" },
-      "description": "Transactions of crane & equipment movement jobs"
+    "/cargoManifests/{manifestId}": {
+      "schema": { "$ref": "#/entities/CargoManifest" },
+      "description": "Transactions of vehicle & cargo manifest"
     }
   }
 }

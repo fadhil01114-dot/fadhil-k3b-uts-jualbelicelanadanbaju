@@ -1,6 +1,6 @@
 {
-  "name": "TPS Global Port - Container Terminal Operations System (TOS)",
-  "description": "Sistem Informasi Operasional Terminal Peti Kemas (Container Terminal Operating System). Kelola Master Data Blok Yard, Crane/RTG, Dermaga, Transaksi Bongkar Muat Vessel, Gate In/Out, dan Laporan Throughput TEU.",
+  "name": "PELNI Samudera - Ship Cargo & Passenger Management System",
+  "description": "Sistem Informasi Manajemen Muatan Kapal dan Penumpang (Ship Cargo & Passenger Operating System). Kelola Master Data Kapal, Rute, Tarif Kelas Penumpang, Kendaraan, Transaksi Tiket PNR, Manifest Cargo Ro-Ro, dan Laporan Revenue.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

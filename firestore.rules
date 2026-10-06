@@ -7,15 +7,15 @@ service cloud.firestore {
       return request.auth != null;
     }
 
-    // Terminal Operating System (TOS) Collections: Open read & write
-    match /yardBlocks/{blockId} { allow read, write: if true; }
-    match /equipments/{equipmentId} { allow read, write: if true; }
-    match /berths/{berthId} { allow read, write: if true; }
-    match /containerCategories/{categoryId} { allow read, write: if true; }
-    match /shippingLines/{lineId} { allow read, write: if true; }
-    match /vesselCalls/{callId} { allow read, write: if true; }
-    match /gateTransactions/{gateId} { allow read, write: if true; }
-    match /containerJobs/{jobId} { allow read, write: if true; }
+    // Ship Passenger & Cargo Collections: Open read & write
+    match /passengerShips/{shipId} { allow read, write: if true; }
+    match /shipRoutes/{routeId} { allow read, write: if true; }
+    match /ticketClasses/{classId} { allow read, write: if true; }
+    match /cargoCategories/{catId} { allow read, write: if true; }
+    match /ticketAgents/{agentId} { allow read, write: if true; }
+    match /shipVoyages/{voyageId} { allow read, write: if true; }
+    match /passengerTickets/{ticketId} { allow read, write: if true; }
+    match /cargoManifests/{manifestId} { allow read, write: if true; }
     match /users/{userId} { allow read, write: if true; }
     match /test/{docId} { allow read, write: if true; }
 
