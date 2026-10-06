@@ -1,0 +1,6 @@
+{
+  "name": "Nevada Store - Official Apparel & Marketplace",
+  "description": "Toko online busana Nevada. Belanja baju, kemeja, dan celana Nevada dengan pembayaran instan, approval bukti transfer, dan laporan sales.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

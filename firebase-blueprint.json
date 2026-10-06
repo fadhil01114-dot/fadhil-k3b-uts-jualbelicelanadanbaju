@@ -1,0 +1,120 @@
+{
+  "entities": {
+    "Product": {
+      "title": "Product",
+      "description": "Nevada apparel product in catalog",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string", "maxLength": 150 },
+        "category": { "type": "string", "enum": ["Kaos & Polo", "Kemeja & Jacket", "Celana & Shorts"] },
+        "price": { "type": "number" },
+        "originalPrice": { "type": "number" },
+        "description": { "type": "string", "maxLength": 1000 },
+        "sizes": { "type": "array", "description": "Available clothing sizes" },
+        "stock": { "type": "number" },
+        "image": { "type": "string", "maxLength": 500 },
+        "rating": { "type": "number" },
+        "soldCount": { "type": "number" },
+        "badge": { "type": "string" },
+        "isFeatured": { "type": "boolean" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "name", "category", "price", "stock", "image"]
+    },
+    "Order": {
+      "title": "Order",
+      "description": "Customer purchase transaction record",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "orderCode": { "type": "string", "maxLength": 30 },
+        "customerName": { "type": "string", "maxLength": 100 },
+        "customerEmail": { "type": "string", "maxLength": 100 },
+        "customerPhone": { "type": "string", "maxLength": 30 },
+        "shippingAddress": { "type": "string", "maxLength": 500 },
+        "shippingMethod": { "type": "string", "maxLength": 50 },
+        "shippingCost": { "type": "number" },
+        "items": { "type": "array" },
+        "subtotal": { "type": "number" },
+        "totalAmount": { "type": "number" },
+        "promoCode": { "type": "string" },
+        "promoDiscount": { "type": "number" },
+        "paymentMethod": { "type": "string" },
+        "paymentStatus": { "type": "string", "enum": ["pending_payment", "proof_uploaded", "approved", "rejected", "processing", "shipped", "completed"] },
+        "paymentProofUrl": { "type": "string", "maxLength": 2000 },
+        "paymentNotes": { "type": "string", "maxLength": 500 },
+        "rejectionReason": { "type": "string", "maxLength": 300 },
+        "trackingNumber": { "type": "string", "maxLength": 100 },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["orderCode", "customerName", "customerEmail", "customerPhone", "shippingAddress", "items", "totalAmount", "paymentMethod", "paymentStatus"]
+    },
+    "Customer": {
+      "title": "Customer",
+      "description": "Customer record for analytics and history",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string", "maxLength": 100 },
+        "email": { "type": "string", "maxLength": 100 },
+        "phone": { "type": "string", "maxLength": 30 },
+        "address": { "type": "string", "maxLength": 500 },
+        "totalOrders": { "type": "number" },
+        "totalSpent": { "type": "number" },
+        "lastOrderAt": { "type": "string" }
+      },
+      "required": ["email", "name"]
+    },
+    "Notification": {
+      "title": "Notification",
+      "description": "In-app order alerts for Admin and Customers",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string", "maxLength": 150 },
+        "message": { "type": "string", "maxLength": 500 },
+        "type": { "type": "string" },
+        "orderId": { "type": "string" },
+        "read": { "type": "boolean" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["title", "message", "type"]
+    },
+    "Admin": {
+      "title": "Admin",
+      "description": "Admin privileges mapping",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "email": { "type": "string" },
+        "role": { "type": "string" }
+      },
+      "required": ["email"]
+    }
+  },
+  "firestore": {
+    "/products/{productId}": {
+      "schema": { "$ref": "#/entities/Product" },
+      "description": "Collection of Nevada apparel products"
+    },
+    "/orders/{orderId}": {
+      "schema": { "$ref": "#/entities/Order" },
+      "description": "Collection of store orders"
+    },
+    "/customers/{customerId}": {
+      "schema": { "$ref": "#/entities/Customer" },
+      "description": "Collection of store customers"
+    },
+    "/notifications/{notificationId}": {
+      "schema": { "$ref": "#/entities/Notification" },
+      "description": "Collection of real-time store order alerts"
+    },
+    "/admins/{adminId}": {
+      "schema": { "$ref": "#/entities/Admin" },
+      "description": "Collection of authorized admin users"
+    }
+  }
+}
