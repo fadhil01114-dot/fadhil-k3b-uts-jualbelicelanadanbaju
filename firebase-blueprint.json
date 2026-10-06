@@ -1,120 +1,180 @@
 {
   "entities": {
-    "Product": {
-      "title": "Product",
-      "description": "Nevada apparel product in catalog",
-      "type": "object",
-      "properties": {
-        "id": { "type": "string" },
-        "name": { "type": "string", "maxLength": 150 },
-        "category": { "type": "string", "enum": ["Kaos & Polo", "Kemeja & Jacket", "Celana & Shorts"] },
-        "price": { "type": "number" },
-        "originalPrice": { "type": "number" },
-        "description": { "type": "string", "maxLength": 1000 },
-        "sizes": { "type": "array", "description": "Available clothing sizes" },
-        "stock": { "type": "number" },
-        "image": { "type": "string", "maxLength": 500 },
-        "rating": { "type": "number" },
-        "soldCount": { "type": "number" },
-        "badge": { "type": "string" },
-        "isFeatured": { "type": "boolean" },
-        "createdAt": { "type": "string" },
-        "updatedAt": { "type": "string" }
-      },
-      "required": ["id", "name", "category", "price", "stock", "image"]
-    },
-    "Order": {
-      "title": "Order",
-      "description": "Customer purchase transaction record",
-      "type": "object",
-      "properties": {
-        "id": { "type": "string" },
-        "orderCode": { "type": "string", "maxLength": 30 },
-        "customerName": { "type": "string", "maxLength": 100 },
-        "customerEmail": { "type": "string", "maxLength": 100 },
-        "customerPhone": { "type": "string", "maxLength": 30 },
-        "shippingAddress": { "type": "string", "maxLength": 500 },
-        "shippingMethod": { "type": "string", "maxLength": 50 },
-        "shippingCost": { "type": "number" },
-        "items": { "type": "array" },
-        "subtotal": { "type": "number" },
-        "totalAmount": { "type": "number" },
-        "promoCode": { "type": "string" },
-        "promoDiscount": { "type": "number" },
-        "paymentMethod": { "type": "string" },
-        "paymentStatus": { "type": "string", "enum": ["pending_payment", "proof_uploaded", "approved", "rejected", "processing", "shipped", "completed"] },
-        "paymentProofUrl": { "type": "string", "maxLength": 2000 },
-        "paymentNotes": { "type": "string", "maxLength": 500 },
-        "rejectionReason": { "type": "string", "maxLength": 300 },
-        "trackingNumber": { "type": "string", "maxLength": 100 },
-        "createdAt": { "type": "string" },
-        "updatedAt": { "type": "string" }
-      },
-      "required": ["orderCode", "customerName", "customerEmail", "customerPhone", "shippingAddress", "items", "totalAmount", "paymentMethod", "paymentStatus"]
-    },
-    "Customer": {
-      "title": "Customer",
-      "description": "Customer record for analytics and history",
+    "Vessel": {
+      "title": "Vessel",
+      "description": "Shipping fleet vessel record",
       "type": "object",
       "properties": {
         "id": { "type": "string" },
         "name": { "type": "string", "maxLength": 100 },
-        "email": { "type": "string", "maxLength": 100 },
-        "phone": { "type": "string", "maxLength": 30 },
-        "address": { "type": "string", "maxLength": 500 },
-        "totalOrders": { "type": "number" },
-        "totalSpent": { "type": "number" },
-        "lastOrderAt": { "type": "string" }
+        "imoNumber": { "type": "string", "maxLength": 20 },
+        "vesselType": { "type": "string" },
+        "dwtCapacity": { "type": "number" },
+        "flag": { "type": "string" },
+        "buildYear": { "type": "number" },
+        "status": { "type": "string" },
+        "captainName": { "type": "string" },
+        "photoUrl": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
       },
-      "required": ["email", "name"]
+      "required": ["id", "name", "imoNumber", "vesselType", "dwtCapacity", "status"]
     },
-    "Notification": {
-      "title": "Notification",
-      "description": "In-app order alerts for Admin and Customers",
+    "Port": {
+      "title": "Port",
+      "description": "Seaport terminal master data",
       "type": "object",
       "properties": {
         "id": { "type": "string" },
-        "title": { "type": "string", "maxLength": 150 },
-        "message": { "type": "string", "maxLength": 500 },
-        "type": { "type": "string" },
-        "orderId": { "type": "string" },
-        "read": { "type": "boolean" },
+        "name": { "type": "string", "maxLength": 100 },
+        "code": { "type": "string", "maxLength": 10 },
+        "city": { "type": "string" },
+        "country": { "type": "string" },
+        "maxDraft": { "type": "number" },
+        "berthCapacity": { "type": "number" },
         "createdAt": { "type": "string" }
       },
-      "required": ["title", "message", "type"]
+      "required": ["id", "name", "code", "city"]
     },
-    "Admin": {
-      "title": "Admin",
-      "description": "Admin privileges mapping",
+    "CargoType": {
+      "title": "CargoType",
+      "description": "Cargo categories and freight rates",
       "type": "object",
       "properties": {
         "id": { "type": "string" },
-        "email": { "type": "string" },
-        "role": { "type": "string" }
+        "name": { "type": "string" },
+        "category": { "type": "string" },
+        "standardRatePerUnit": { "type": "number" },
+        "unitName": { "type": "string" },
+        "description": { "type": "string" }
       },
-      "required": ["email"]
+      "required": ["id", "name", "standardRatePerUnit", "unitName"]
+    },
+    "Shipper": {
+      "title": "Shipper",
+      "description": "Client / Shipper company master record",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "companyName": { "type": "string" },
+        "npwp": { "type": "string" },
+        "contactPerson": { "type": "string" },
+        "email": { "type": "string" },
+        "phone": { "type": "string" },
+        "address": { "type": "string" },
+        "creditLimit": { "type": "number" },
+        "totalBookings": { "type": "number" }
+      },
+      "required": ["id", "companyName", "email", "phone"]
+    },
+    "CrewMember": {
+      "title": "CrewMember",
+      "description": "Ship crew and officer master record",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "fullName": { "type": "string" },
+        "rank": { "type": "string" },
+        "certificateNo": { "type": "string" },
+        "assignedVesselId": { "type": "string" },
+        "status": { "type": "string" }
+      },
+      "required": ["id", "fullName", "rank"]
+    },
+    "Voyage": {
+      "title": "Voyage",
+      "description": "Ship voyage schedule and manifest transaction",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "voyageNumber": { "type": "string" },
+        "vesselId": { "type": "string" },
+        "vesselName": { "type": "string" },
+        "originPortId": { "type": "string" },
+        "originPortName": { "type": "string" },
+        "destinationPortId": { "type": "string" },
+        "destinationPortName": { "type": "string" },
+        "etd": { "type": "string" },
+        "eta": { "type": "string" },
+        "status": { "type": "string" },
+        "captainName": { "type": "string" },
+        "totalFreightValue": { "type": "number" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "voyageNumber", "vesselId", "originPortId", "destinationPortId", "etd", "eta", "status"]
+    },
+    "CargoBooking": {
+      "title": "CargoBooking",
+      "description": "Cargo shipment booking / Bill of Lading",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "bookingNumber": { "type": "string" },
+        "voyageId": { "type": "string" },
+        "voyageNumber": { "type": "string" },
+        "shipperId": { "type": "string" },
+        "shipperName": { "type": "string" },
+        "cargoTypeId": { "type": "string" },
+        "cargoTypeName": { "type": "string" },
+        "quantity": { "type": "number" },
+        "totalFreightFee": { "type": "number" },
+        "paymentStatus": { "type": "string" },
+        "cargoStatus": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "bookingNumber", "voyageId", "shipperId", "cargoTypeId", "quantity", "totalFreightFee", "paymentStatus"]
+    },
+    "MaintenanceLog": {
+      "title": "MaintenanceLog",
+      "description": "Vessel maintenance and repair logs",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "vesselId": { "type": "string" },
+        "vesselName": { "type": "string" },
+        "maintenanceType": { "type": "string" },
+        "startDate": { "type": "string" },
+        "endDate": { "type": "string" },
+        "costAmount": { "type": "number" },
+        "vendorName": { "type": "string" },
+        "status": { "type": "string" },
+        "notes": { "type": "string" }
+      },
+      "required": ["id", "vesselId", "maintenanceType", "costAmount", "status"]
     }
   },
   "firestore": {
-    "/products/{productId}": {
-      "schema": { "$ref": "#/entities/Product" },
-      "description": "Collection of Nevada apparel products"
+    "/vessels/{vesselId}": {
+      "schema": { "$ref": "#/entities/Vessel" },
+      "description": "Master list of shipping fleet vessels"
     },
-    "/orders/{orderId}": {
-      "schema": { "$ref": "#/entities/Order" },
-      "description": "Collection of store orders"
+    "/ports/{portId}": {
+      "schema": { "$ref": "#/entities/Port" },
+      "description": "Master list of seaports and terminals"
     },
-    "/customers/{customerId}": {
-      "schema": { "$ref": "#/entities/Customer" },
-      "description": "Collection of store customers"
+    "/cargoTypes/{cargoTypeId}": {
+      "schema": { "$ref": "#/entities/CargoType" },
+      "description": "Master list of cargo types and tariff rates"
     },
-    "/notifications/{notificationId}": {
-      "schema": { "$ref": "#/entities/Notification" },
-      "description": "Collection of real-time store order alerts"
+    "/shippers/{shipperId}": {
+      "schema": { "$ref": "#/entities/Shipper" },
+      "description": "Master list of shippers and client companies"
     },
-    "/admins/{adminId}": {
-      "schema": { "$ref": "#/entities/Admin" },
-      "description": "Collection of authorized admin users"
+    "/crews/{crewId}": {
+      "schema": { "$ref": "#/entities/CrewMember" },
+      "description": "Master list of ship crew and officers"
+    },
+    "/voyages/{voyageId}": {
+      "schema": { "$ref": "#/entities/Voyage" },
+      "description": "Transaction logs of ship voyage schedules"
+    },
+    "/bookings/{bookingId}": {
+      "schema": { "$ref": "#/entities/CargoBooking" },
+      "description": "Transaction logs of cargo bookings & Bill of Lading"
+    },
+    "/maintenances/{maintenanceId}": {
+      "schema": { "$ref": "#/entities/MaintenanceLog" },
+      "description": "Transaction logs of vessel repair & maintenance"
     }
   }
 }

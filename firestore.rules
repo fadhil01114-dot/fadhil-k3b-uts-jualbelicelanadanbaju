@@ -6,45 +6,20 @@ service cloud.firestore {
     function isSignedIn() {
       return request.auth != null;
     }
-    
-    function isAdmin() {
-      return isSignedIn() && (
-        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) ||
-        request.auth.token.email == "fadhil01114@gmail.com"
-      );
-    }
 
-    // Products: Public read for storefront; write for admin or open seed initially
-    match /products/{productId} {
-      allow read: if true;
-      allow create, update, delete: if true; // allow initial setup & admin management
-    }
+    // Shipping Management Collections: Full read & write for operational app usage
+    match /vessels/{vesselId} { allow read, write: if true; }
+    match /ports/{portId} { allow read, write: if true; }
+    match /cargoTypes/{cargoTypeId} { allow read, write: if true; }
+    match /shippers/{shipperId} { allow read, write: if true; }
+    match /crews/{crewId} { allow read, write: if true; }
+    match /voyages/{voyageId} { allow read, write: if true; }
+    match /bookings/{bookingId} { allow read, write: if true; }
+    match /maintenances/{maintenanceId} { allow read, write: if true; }
+    match /users/{userId} { allow read, write: if true; }
+    match /test/{docId} { allow read, write: if true; }
 
-    // Orders: Public create (guest checkout), public read/update by order ID / customer code, full access for admins
-    match /orders/{orderId} {
-      allow read: if true;
-      allow create: if true;
-      allow update: if true;
-      allow delete: if isAdmin();
-    }
-
-    // Customers: Read & write for store operations
-    match /customers/{customerId} {
-      allow read, write: if true;
-    }
-
-    // Notifications: Read & write for real-time alerts
-    match /notifications/{notificationId} {
-      allow read, write: if true;
-    }
-
-    // Admins collection
-    match /admins/{adminId} {
-      allow read: if true;
-      allow write: if isAdmin() || !exists(/databases/$(database)/documents/admins/$(request.auth.uid));
-    }
-
-    // Default deny catch-all
+    // Catch-all
     match /{document=**} {
       allow read, write: if false;
     }

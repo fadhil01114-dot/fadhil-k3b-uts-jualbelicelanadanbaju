@@ -1,6 +1,6 @@
 {
-  "name": "Nevada Store - Official Apparel & Marketplace",
-  "description": "Toko online busana Nevada. Belanja baju, kemeja, dan celana Nevada dengan pembayaran instan, approval bukti transfer, dan laporan sales.",
+  "name": "Samudera Nusantara Maritime - Shipping & Fleet Management",
+  "description": "Sistem Informasi Manajemen Perusahaan Pelayaran & Fleet Logistics. Kelola Master Data Kapal, Pelabuhan, Jadwal Pelayaran (Voyage), Booking Kargo, dan Laporan Keuangan Real-time.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }
