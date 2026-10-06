@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { MapPin, Plus, Edit, Trash2, Search, Building } from 'lucide-react';
+import { MapPin, Plus, Edit, Trash2, Search } from 'lucide-react';
 import { Port } from '../../types/shipping';
 import { addPort, updatePort, deletePort } from '../../lib/shippingDb';
 
@@ -11,6 +11,7 @@ export const PortsMaster: React.FC<PortsMasterProps> = ({ ports }) => {
   const [search, setSearch] = useState<string>('');
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
   const [editingPort, setEditingPort] = useState<Port | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   const [name, setName] = useState<string>('');
   const [code, setCode] = useState<string>('');
@@ -45,17 +46,31 @@ export const PortsMaster: React.FC<PortsMasterProps> = ({ ports }) => {
     e.preventDefault();
     if (!name || !code || !city) return;
 
-    if (editingPort) {
-      await updatePort(editingPort.id, { name, code, city, country, maxDraft, berthCapacity });
-    } else {
-      await addPort({ name, code, city, country, maxDraft, berthCapacity });
+    setIsSubmitting(true);
+    try {
+      if (editingPort) {
+        await updatePort(editingPort.id, { name, code, city, country, maxDraft, berthCapacity });
+        alert(`✅ Data pelabuhan "${name}" berhasil diperbarui!`);
+      } else {
+        await addPort({ name, code, city, country, maxDraft, berthCapacity });
+        alert(`✅ Pelabuhan baru "${name}" berhasil ditambahkan ke database!`);
+      }
+      setIsOpenModal(false);
+    } catch (err) {
+      alert('⚠️ Gagal menyimpan pelabuhan.');
+    } finally {
+      setIsSubmitting(false);
     }
-    setIsOpenModal(false);
   };
 
   const handleDelete = async (id: string, pName: string) => {
     if (confirm(`Hapus pelabuhan "${pName}"?`)) {
-      await deletePort(id);
+      try {
+        await deletePort(id);
+        alert(`🗑️ Pelabuhan "${pName}" berhasil dihapus.`);
+      } catch (err) {
+        alert('⚠️ Gagal menghapus pelabuhan.');
+      }
     }
   };
 
@@ -167,7 +182,7 @@ export const PortsMaster: React.FC<PortsMasterProps> = ({ ports }) => {
                   placeholder="e.g. Pelabuhan Tanjung Priok"
                   value={name}
                   onChange={e => setName(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl border border-slate-300 focus:outline-none focus:border-sky-600"
+                  className="w-full px-3 py-2 rounded-xl border border-slate-300 focus:outline-none focus:border-sky-600 font-bold"
                 />
               </div>
 
@@ -205,7 +220,7 @@ export const PortsMaster: React.FC<PortsMasterProps> = ({ ports }) => {
                     step="0.1"
                     value={maxDraft}
                     onChange={e => setMaxDraft(Number(e.target.value))}
-                    className="w-full px-3 py-2 rounded-xl border border-slate-300 focus:outline-none focus:border-sky-600"
+                    className="w-full px-3 py-2 rounded-xl border border-slate-300 focus:outline-none focus:border-sky-600 font-bold"
                   />
                 </div>
 
@@ -215,7 +230,7 @@ export const PortsMaster: React.FC<PortsMasterProps> = ({ ports }) => {
                     type="number"
                     value={berthCapacity}
                     onChange={e => setBerthCapacity(Number(e.target.value))}
-                    className="w-full px-3 py-2 rounded-xl border border-slate-300 focus:outline-none focus:border-sky-600"
+                    className="w-full px-3 py-2 rounded-xl border border-slate-300 focus:outline-none focus:border-sky-600 font-bold"
                   />
                 </div>
               </div>
@@ -223,9 +238,10 @@ export const PortsMaster: React.FC<PortsMasterProps> = ({ ports }) => {
               <div className="flex gap-2 pt-2">
                 <button
                   type="submit"
-                  className="flex-1 py-2.5 bg-sky-600 hover:bg-sky-500 font-bold text-white rounded-xl shadow"
+                  disabled={isSubmitting}
+                  className="flex-1 py-2.5 bg-sky-600 hover:bg-sky-500 font-bold text-white rounded-xl shadow disabled:opacity-50"
                 >
-                  Simpan Pelabuhan
+                  {isSubmitting ? 'Menyimpan...' : 'Simpan Pelabuhan'}
                 </button>
                 <button
                   type="button"

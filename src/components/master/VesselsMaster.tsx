@@ -11,6 +11,7 @@ export const VesselsMaster: React.FC<VesselsMasterProps> = ({ vessels }) => {
   const [search, setSearch] = useState<string>('');
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
   const [editingVessel, setEditingVessel] = useState<Vessel | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   // Form Fields
   const [name, setName] = useState<string>('');
@@ -46,8 +47,8 @@ export const VesselsMaster: React.FC<VesselsMasterProps> = ({ vessels }) => {
     setFlag(v.flag);
     setBuildYear(v.buildYear);
     setStatus(v.status);
-    setCaptainName(v.captainName);
-    setPhotoUrl(v.photoUrl);
+    setCaptainName(v.captainName || '');
+    setPhotoUrl(v.photoUrl || '');
     setIsOpenModal(true);
   };
 
@@ -55,37 +56,51 @@ export const VesselsMaster: React.FC<VesselsMasterProps> = ({ vessels }) => {
     e.preventDefault();
     if (!name || !imoNumber) return;
 
-    if (editingVessel) {
-      await updateVessel(editingVessel.id, {
-        name,
-        imoNumber,
-        vesselType,
-        dwtCapacity,
-        flag,
-        buildYear,
-        status,
-        captainName,
-        photoUrl,
-      });
-    } else {
-      await addVessel({
-        name,
-        imoNumber,
-        vesselType,
-        dwtCapacity,
-        flag,
-        buildYear,
-        status,
-        captainName,
-        photoUrl,
-      });
+    setIsSubmitting(true);
+    try {
+      if (editingVessel) {
+        await updateVessel(editingVessel.id, {
+          name,
+          imoNumber,
+          vesselType,
+          dwtCapacity,
+          flag,
+          buildYear,
+          status,
+          captainName,
+          photoUrl,
+        });
+        alert(`✅ Kapal "${name}" berhasil diperbarui di database Firestore!`);
+      } else {
+        await addVessel({
+          name,
+          imoNumber,
+          vesselType,
+          dwtCapacity,
+          flag,
+          buildYear,
+          status,
+          captainName,
+          photoUrl,
+        });
+        alert(`✅ Kapal baru "${name}" berhasil ditambahkan ke database Firestore!`);
+      }
+      setIsOpenModal(false);
+    } catch (err) {
+      alert('⚠️ Gagal menyimpan data kapal. Silakan periksa kembali isian form.');
+    } finally {
+      setIsSubmitting(false);
     }
-    setIsOpenModal(false);
   };
 
   const handleDelete = async (id: string, vName: string) => {
     if (confirm(`Apakah Anda yakin ingin menghapus kapal "${vName}" dari database?`)) {
-      await deleteVessel(id);
+      try {
+        await deleteVessel(id);
+        alert(`🗑️ Kapal "${vName}" berhasil dihapus.`);
+      } catch (err) {
+        alert('⚠️ Gagal menghapus kapal.');
+      }
     }
   };
 
@@ -108,13 +123,13 @@ export const VesselsMaster: React.FC<VesselsMasterProps> = ({ vessels }) => {
             <h2 className="text-lg font-black text-slate-900">Master Data Kapal / Armada</h2>
           </div>
           <p className="text-xs text-slate-500 mt-1">
-            Kelola data spesifikasi teknis, tipe, kapasitas DWT, dan status operasional kapal.
+            Kelola data spesifikasi teknis, tipe, kapasitas DWT, dan status operasional kapal di database Firestore.
           </p>
         </div>
 
         <button
           onClick={handleOpenAdd}
-          className="px-4 py-2.5 bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs rounded-xl flex items-center gap-1.5 shadow"
+          className="px-4 py-2.5 bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs rounded-xl flex items-center gap-1.5 shadow transition-all active:scale-95"
         >
           <Plus className="w-4 h-4" />
           <span>Tambah Kapal Baru</span>
@@ -151,56 +166,64 @@ export const VesselsMaster: React.FC<VesselsMasterProps> = ({ vessels }) => {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
-              {filtered.map(v => (
-                <tr key={v.id} className="hover:bg-slate-50/80 transition-colors">
-                  <td className="p-4 flex items-center gap-3">
-                    <img src={v.photoUrl} alt={v.name} className="w-12 h-12 object-cover rounded-xl bg-slate-100 border shrink-0" />
-                    <div>
-                      <div className="font-extrabold text-slate-900 text-sm">{v.name}</div>
-                      <div className="text-[10px] text-slate-400">ID: {v.id}</div>
-                    </div>
-                  </td>
-                  <td className="p-4">
-                    <div className="font-bold text-slate-800">{v.vesselType}</div>
-                    <div className="font-mono text-[10px] text-sky-700 font-semibold">{v.imoNumber}</div>
-                  </td>
-                  <td className="p-4 font-black text-slate-900">
-                    {v.dwtCapacity.toLocaleString('id-ID')} DWT
-                  </td>
-                  <td className="p-4">
-                    <div className="font-bold text-slate-800">{v.buildYear}</div>
-                    <div className="text-[11px] text-slate-500">{v.flag}</div>
-                  </td>
-                  <td className="p-4">
-                    <span className={`px-2.5 py-1 rounded-full text-[10px] font-extrabold ${
-                      v.status === 'In Voyage' ? 'bg-sky-100 text-sky-800 border border-sky-300' :
-                      v.status === 'Active' ? 'bg-emerald-100 text-emerald-800 border border-emerald-300' :
-                      v.status === 'Under Maintenance' ? 'bg-amber-100 text-amber-800 border border-amber-300' : 'bg-slate-200 text-slate-800'
-                    }`}>
-                      {v.status}
-                    </span>
-                  </td>
-                  <td className="p-4 font-semibold text-slate-800">{v.captainName}</td>
-                  <td className="p-4 text-right">
-                    <div className="flex items-center justify-end gap-1.5">
-                      <button
-                        onClick={() => handleOpenEdit(v)}
-                        className="p-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-bold"
-                        title="Edit Data Kapal"
-                      >
-                        <Edit className="w-3.5 h-3.5" />
-                      </button>
-                      <button
-                        onClick={() => handleDelete(v.id, v.name)}
-                        className="p-1.5 bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-lg font-bold"
-                        title="Hapus Kapal"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
+              {filtered.length === 0 ? (
+                <tr>
+                  <td colSpan={7} className="p-8 text-center text-slate-400 text-xs">
+                    Belum ada data kapal. Klik tombol "Tambah Kapal Baru" untuk menambahkan data.
                   </td>
                 </tr>
-              ))}
+              ) : (
+                filtered.map(v => (
+                  <tr key={v.id} className="hover:bg-slate-50/80 transition-colors">
+                    <td className="p-4 flex items-center gap-3">
+                      <img src={v.photoUrl || 'https://images.unsplash.com/photo-1559136555-9303baea8ebd?auto=format&fit=crop&w=800&q=80'} alt={v.name} className="w-12 h-12 object-cover rounded-xl bg-slate-100 border shrink-0" />
+                      <div>
+                        <div className="font-extrabold text-slate-900 text-sm">{v.name}</div>
+                        <div className="text-[10px] text-slate-400 font-mono">{v.id}</div>
+                      </div>
+                    </td>
+                    <td className="p-4">
+                      <div className="font-bold text-slate-800">{v.vesselType}</div>
+                      <div className="font-mono text-[10px] text-sky-700 font-semibold">{v.imoNumber}</div>
+                    </td>
+                    <td className="p-4 font-black text-slate-900">
+                      {v.dwtCapacity.toLocaleString('id-ID')} DWT
+                    </td>
+                    <td className="p-4">
+                      <div className="font-bold text-slate-800">{v.buildYear}</div>
+                      <div className="text-[11px] text-slate-500">{v.flag}</div>
+                    </td>
+                    <td className="p-4">
+                      <span className={`px-2.5 py-1 rounded-full text-[10px] font-extrabold ${
+                        v.status === 'In Voyage' ? 'bg-sky-100 text-sky-800 border border-sky-300' :
+                        v.status === 'Active' ? 'bg-emerald-100 text-emerald-800 border border-emerald-300' :
+                        v.status === 'Under Maintenance' ? 'bg-amber-100 text-amber-800 border border-amber-300' : 'bg-slate-200 text-slate-800'
+                      }`}>
+                        {v.status}
+                      </span>
+                    </td>
+                    <td className="p-4 font-semibold text-slate-800">{v.captainName || '-'}</td>
+                    <td className="p-4 text-right">
+                      <div className="flex items-center justify-end gap-1.5">
+                        <button
+                          onClick={() => handleOpenEdit(v)}
+                          className="p-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-bold"
+                          title="Edit Data Kapal"
+                        >
+                          <Edit className="w-3.5 h-3.5" />
+                        </button>
+                        <button
+                          onClick={() => handleDelete(v.id, v.name)}
+                          className="p-1.5 bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-lg font-bold"
+                          title="Hapus Kapal"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>
@@ -220,9 +243,10 @@ export const VesselsMaster: React.FC<VesselsMasterProps> = ({ vessels }) => {
                 <input
                   type="text"
                   required
+                  placeholder="e.g. MV Samudera Express II"
                   value={name}
                   onChange={e => setName(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl border border-slate-300 focus:outline-none focus:border-sky-600"
+                  className="w-full px-3 py-2 rounded-xl border border-slate-300 focus:outline-none focus:border-sky-600 font-bold"
                 />
               </div>
 
@@ -243,7 +267,7 @@ export const VesselsMaster: React.FC<VesselsMasterProps> = ({ vessels }) => {
                   <select
                     value={vesselType}
                     onChange={e => setVesselType(e.target.value as VesselType)}
-                    className="w-full px-3 py-2 rounded-xl border border-slate-300 focus:outline-none focus:border-sky-600"
+                    className="w-full px-3 py-2 rounded-xl border border-slate-300 focus:outline-none focus:border-sky-600 font-semibold"
                   >
                     <option value="Container Ship">Container Ship</option>
                     <option value="Bulk Carrier">Bulk Carrier</option>
@@ -261,7 +285,7 @@ export const VesselsMaster: React.FC<VesselsMasterProps> = ({ vessels }) => {
                     required
                     value={dwtCapacity}
                     onChange={e => setDwtCapacity(Number(e.target.value))}
-                    className="w-full px-3 py-2 rounded-xl border border-slate-300 focus:outline-none focus:border-sky-600"
+                    className="w-full px-3 py-2 rounded-xl border border-slate-300 focus:outline-none focus:border-sky-600 font-bold"
                   />
                 </div>
 
@@ -294,6 +318,7 @@ export const VesselsMaster: React.FC<VesselsMasterProps> = ({ vessels }) => {
                 <label className="block font-bold text-slate-700 mb-1">Nama Nakhoda / Captain</label>
                 <input
                   type="text"
+                  placeholder="e.g. Capt. Bambang Suryono"
                   value={captainName}
                   onChange={e => setCaptainName(e.target.value)}
                   className="w-full px-3 py-2 rounded-xl border border-slate-300 focus:outline-none focus:border-sky-600"
@@ -304,6 +329,7 @@ export const VesselsMaster: React.FC<VesselsMasterProps> = ({ vessels }) => {
                 <label className="block font-bold text-slate-700 mb-1">URL Foto Kapal</label>
                 <input
                   type="text"
+                  placeholder="https://images.unsplash.com/..."
                   value={photoUrl}
                   onChange={e => setPhotoUrl(e.target.value)}
                   className="w-full px-3 py-2 rounded-xl border border-slate-300 focus:outline-none focus:border-sky-600"
@@ -313,9 +339,10 @@ export const VesselsMaster: React.FC<VesselsMasterProps> = ({ vessels }) => {
               <div className="flex gap-2 pt-2">
                 <button
                   type="submit"
-                  className="flex-1 py-2.5 bg-sky-600 hover:bg-sky-500 font-bold text-white rounded-xl shadow"
+                  disabled={isSubmitting}
+                  className="flex-1 py-2.5 bg-sky-600 hover:bg-sky-500 font-bold text-white rounded-xl shadow disabled:opacity-50"
                 >
-                  Simpan Data Kapal
+                  {isSubmitting ? 'Menyimpan...' : 'Simpan Data Kapal'}
                 </button>
                 <button
                   type="button"
