@@ -7,15 +7,15 @@ service cloud.firestore {
       return request.auth != null;
     }
 
-    // Shipping Management Collections: Full read & write for operational app usage
-    match /vessels/{vesselId} { allow read, write: if true; }
-    match /ports/{portId} { allow read, write: if true; }
-    match /cargoTypes/{cargoTypeId} { allow read, write: if true; }
-    match /shippers/{shipperId} { allow read, write: if true; }
-    match /crews/{crewId} { allow read, write: if true; }
-    match /voyages/{voyageId} { allow read, write: if true; }
-    match /bookings/{bookingId} { allow read, write: if true; }
-    match /maintenances/{maintenanceId} { allow read, write: if true; }
+    // Terminal Operating System (TOS) Collections: Open read & write
+    match /yardBlocks/{blockId} { allow read, write: if true; }
+    match /equipments/{equipmentId} { allow read, write: if true; }
+    match /berths/{berthId} { allow read, write: if true; }
+    match /containerCategories/{categoryId} { allow read, write: if true; }
+    match /shippingLines/{lineId} { allow read, write: if true; }
+    match /vesselCalls/{callId} { allow read, write: if true; }
+    match /gateTransactions/{gateId} { allow read, write: if true; }
+    match /containerJobs/{jobId} { allow read, write: if true; }
     match /users/{userId} { allow read, write: if true; }
     match /test/{docId} { allow read, write: if true; }
 

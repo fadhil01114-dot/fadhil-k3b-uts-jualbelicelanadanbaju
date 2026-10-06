@@ -1,6 +1,6 @@
 {
-  "name": "Samudera Nusantara Maritime - Shipping & Fleet Management",
-  "description": "Sistem Informasi Manajemen Perusahaan Pelayaran & Fleet Logistics. Kelola Master Data Kapal, Pelabuhan, Jadwal Pelayaran (Voyage), Booking Kargo, dan Laporan Keuangan Real-time.",
+  "name": "TPS Global Port - Container Terminal Operations System (TOS)",
+  "description": "Sistem Informasi Operasional Terminal Peti Kemas (Container Terminal Operating System). Kelola Master Data Blok Yard, Crane/RTG, Dermaga, Transaksi Bongkar Muat Vessel, Gate In/Out, dan Laporan Throughput TEU.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }
